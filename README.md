@@ -6,7 +6,7 @@
 [![GitHub Discussions][discussion-shield]](https://github.com/Kentico/Home/discussions)
 
 <p align="center">
-<image src="docs/kontent.webp" alt="kontent logo" width="250" />
+<image src="docs/kontent.webp" alt="kontent logo" width="150" />
 </p>
 
 ## Description

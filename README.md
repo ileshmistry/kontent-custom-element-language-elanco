@@ -1,6 +1,17 @@
+![Last modified][last-commit]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+[![Stack Overflow][stack-shield]](https://stackoverflow.com/tags/kentico-kontent)
+[![GitHub Discussions][discussion-shield]](https://github.com/Kentico/Home/discussions)
+
+<p align="center">
+<image src="docs/kontent.webp" alt="kontent logo" width="250" />
+</p>
+
 ## Description
 
-This custom element re-creates "copy from language" so that it is recursively applied to all children linked items
+This custom element for [Kentico Kontent](https://kontent.ai) can be used for deep "copy from language" feature.
 
 ## Quick Deploy
 
@@ -14,10 +25,17 @@ You will need to add the custom element to a content type filling in the hosted 
 
 ```json
 {
+   // required
     "projectId": "<YOUR PROJECT ID>",
     "apiKEy": "<YOUR MANAGEMENT API KEY>",
+    // optional
+    "overwriteExistingVariants": true | false,
 }
 ```
+
+## Demo
+
+![Demo Animation][product-demo]
 
 ## What is Saved
 
@@ -47,4 +65,3 @@ Originally created by [@Enngage](https://github.com/Enngage)
 -   [Kentico Kontent's Integration documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/integrations-overview)
 -   [Custom Element documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/content-editing-extensions)
 -   [Custom Element API reference](https://docs.kontent.ai/reference/custom-elements-js-api)
-

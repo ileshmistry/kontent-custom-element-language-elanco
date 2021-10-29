@@ -1,10 +1,11 @@
 import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
-import { IManagementClient, ManagementClient } from '@kentico/kontent-management';
-import { from, Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ContentItemModels, LanguageVariantModels, ManagementClient, SharedModels } from '@kentico/kontent-management';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CoreComponent } from './core/core.component';
+import { IItemsPreviewDialogData, ItemsPreviewDialogComponent } from './dialogs/items-preview-dialog.component';
 import { KontentService } from './services/kontent.service';
 import { ILanguage, ManagementService } from './services/management.service';
 
@@ -15,12 +16,22 @@ import { ILanguage, ManagementService } from './services/management.service';
 })
 export class AppComponent extends CoreComponent implements OnInit, AfterViewChecked {
     // config
+    public customElemengHeightPx: number = 500;
     public projectId?: string;
     public managementApiKey?: string;
+    public overwriteExistingVariants: boolean = false;
 
     // base
     public loading: boolean = false;
     public errorMessage?: string;
+    public infoMessage?: string;
+
+    // state
+    public disabled: boolean = false;
+
+    // context
+    public itemId?: string;
+    public targetLanguageCodename?: string;
 
     // languages
     public languages: ILanguage[] = [];
@@ -29,6 +40,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     private client?: ManagementClient;
 
     constructor(
+        private dialog: MatDialog,
         private managementService: ManagementService,
         private kontentService: KontentService,
         cdr: ChangeDetectorRef
@@ -42,7 +54,10 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                 (data) => {
                     this.projectId = data.projectId;
                     this.managementApiKey = data.apiKey;
-                    data.projectId
+                    this.targetLanguageCodename = data.context.variant.codename;
+                    this.itemId = data.context.item.id;
+                    this.disabled = data.isDisabled;
+                    this.overwriteExistingVariants = data.overwriteExistingVariants ?? false;
 
                     this.client = this.getManagementClient(this.projectId, this.managementApiKey);
 
@@ -59,6 +74,9 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         } else {
             this.projectId = this.getDefaultProjectId();
             this.managementApiKey = this.getDefaultManagementApiKey();
+            this.targetLanguageCodename = this.getDefaultTargetLanguageCodename();
+            this.itemId = this.getDefaultContentItemId();
+            this.overwriteExistingVariants = this.getDefaultOverwriteExistingLanguageVariants();
 
             this.client = this.getManagementClient(this.projectId, this.managementApiKey);
 
@@ -69,17 +87,73 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     }
 
     ngAfterViewChecked(): void {
+        this.updateElementHeight();
+    }
+
+    openPreviewDialog(): void {
+        if (!this.client || !this.selectedLanguage || !this.targetLanguageCodename || !this.itemId) {
+            return;
+        }
+        const data: IItemsPreviewDialogData = {
+            overwriteExistingVariants: this.overwriteExistingVariants,
+            client: this.client,
+            fromLanguageCodename: this.selectedLanguage.codename,
+            linkedItemId: this.itemId,
+            toLanguageCodename: this.targetLanguageCodename
+        };
+
+        this.dialog.open(ItemsPreviewDialogComponent, {
+            width: '1200px',
+            data: data
+        });
+    }
+
+    async handleRecursiveCopy(): Promise<void> {
+        if (this.selectedLanguage && this.client && this.targetLanguageCodename && this.itemId) {
+            try {
+                this.infoMessage = undefined;
+                this.errorMessage = undefined;
+                this.loading = true;
+
+                const createdLanguageVariants: LanguageVariantModels.ContentItemLanguageVariant[] = [];
+                const processedContentItems: ContentItemModels.ContentItem[] = [];
+                const existingContentItems: ContentItemModels.ContentItem[] = [];
+
+                await this.managementService.copyFromLanguageRecursiveAsync({
+                    client: this.client,
+                    linkedItemId: this.itemId,
+                    fromLanguageCodename: this.selectedLanguage.codename,
+                    toLanguageCodename: this.targetLanguageCodename,
+                    createdLanguageVariants: createdLanguageVariants,
+                    contentItemsToCreate: processedContentItems,
+                    isPreview: false,
+                    overwriteLanguageVariants: environment.kontent.overwriteExistingLanguageVariants,
+                    existingContentItems: existingContentItems
+                });
+
+                this.infoMessage = `Copied '${createdLanguageVariants.length}' language variants from language '${this.selectedLanguage.codename}' to language '${this.targetLanguageCodename}'`;
+
+                this.loading = false;
+
+                super.markForCheck();
+            } catch (error) {
+                this.loading = false;
+
+                if (error instanceof SharedModels.ContentManagementBaseKontentError) {
+                    this.errorMessage = error.message;
+                } else {
+                    this.errorMessage = 'Failed to copy from language. See console for detailed error';
+                }
+                super.markForCheck();
+                console.error(error);
+            }
+        }
+    }
+
+    private updateElementHeight(): void {
         // update size of Kontent UI
         if (this.isKontentContext()) {
-            // this is required because otherwise the offsetHeight can return 0 in some circumstances
-            // https://stackoverflow.com/questions/294250/how-do-i-retrieve-an-html-elements-actual-width-and-height
-            setTimeout(() => {
-                const htmlElement = document.getElementById('htmlElem');
-                if (htmlElement) {
-                    const height = htmlElement.offsetHeight;
-                    this.kontentService.updateSizeToMatchHtml(height);
-                }
-            }, 50);
+            this.kontentService.updateSizeToMatchHtml(this.customElemengHeightPx);
         }
     }
 
@@ -87,7 +161,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         super.subscribeToObservable(
             this.managementService.getLanguages(client).pipe(
                 map((languages) => {
-                    this.languages = languages;
+                    // filter out target language as it makes no sense to update same languages
+                    this.languages = languages.filter((m) => m.codename !== this.targetLanguageCodename);
 
                     super.markForCheck();
                 })
@@ -120,6 +195,30 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         }
 
         return environment.kontent.projectId;
+    }
+
+    private getDefaultContentItemId(): string | undefined {
+        if (this.isKontentContext()) {
+            return undefined;
+        }
+
+        return environment.kontent.itemId;
+    }
+
+    private getDefaultTargetLanguageCodename(): string | undefined {
+        if (this.isKontentContext()) {
+            return undefined;
+        }
+
+        return environment.kontent.targetLanguageCodename;
+    }
+
+    private getDefaultOverwriteExistingLanguageVariants(): boolean {
+        if (this.isKontentContext()) {
+            return false;
+        }
+
+        return environment.kontent.overwriteExistingLanguageVariants;
     }
 
     private isKontentContext(): boolean {

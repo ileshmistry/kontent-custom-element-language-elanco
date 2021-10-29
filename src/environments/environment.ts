@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     kontent: {
-        overwriteExistingLanguageVariants: false,
+        overwriteExistingLanguageVariants: true,
         itemId: '66bdb76d-3199-4aef-b297-ee3ea6258266',
         targetLanguageCodename: 'cs-CZ',
         projectId: '4a85f693-5438-01cb-6fd1-2d3013749434',

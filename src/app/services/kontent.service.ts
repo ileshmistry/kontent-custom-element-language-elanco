@@ -42,7 +42,7 @@ export class KontentService {
                 onInit({
                     context: context,
                     value: element.value,
-                    overwriteExistingVariants: element.overwriteExistingVariants,
+                    overwriteExistingVariants: element.config.overwriteExistingVariants,
                     isDisabled: element.disabled,
                     apiKey: element.config.apiKey,
                     projectId: element.config.projectId

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ContentItemModels, LanguageVariantModels, ManagementClient, SharedModels } from '@kentico/kontent-management';
-import { environment } from 'src/environments/environment';
 import { ManagementService } from '../services/management.service';
 
 export interface IItemsPreviewDialogData {

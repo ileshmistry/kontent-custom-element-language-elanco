@@ -11,7 +11,7 @@
 
 ## Description
 
-This custom element for [Kentico Kontent](https://kontent.ai) can be used for deep "copy from language" feature.
+This custom element for [Kentico Kontent](https://kontent.ai) can be used for deep `copy from language` feature. This means it will copy from language current item & all its linked items recursively.
 
 ## Quick Deploy
 
@@ -39,7 +39,7 @@ You will need to add the custom element to a content type filling in the hosted 
 
 ## What is Saved
 
-This custom element is not saving any value
+This custom element does not save any value
 
 ## Development
 

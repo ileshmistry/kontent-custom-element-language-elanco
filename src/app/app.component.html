@@ -1,0 +1,18 @@
+<div>
+    <div libFlexRow>
+        <div libFlexColumn>Select language to copy from:</div>
+        <div libFlexColumn [libFlexSize]="'250px'">
+            <mat-form-field appearance="fill">
+                <mat-select  [(value)]="selectedLanguage">
+                    <mat-option *ngFor="let language of languages" [value]="language">
+                        {{ language.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="errorMessage" class="error-box push-bottom">
+    {{ errorMessage }}
+</div>

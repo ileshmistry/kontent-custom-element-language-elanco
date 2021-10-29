@@ -65,3 +65,20 @@ Originally created by [@Enngage](https://github.com/Enngage)
 -   [Kentico Kontent's Integration documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/integrations-overview)
 -   [Custom Element documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/content-editing-extensions)
 -   [Custom Element API reference](https://docs.kontent.ai/reference/custom-elements-js-api)
+
+[last-commit]: https://img.shields.io/github/last-commit/Enngage/kontent-custom-element-wistia?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[contributors-url]: https://github.com/Enngage/kontent-custom-element-language-copy/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[forks-url]: https://github.com/Enngage/kontent-custom-element-language-copy/network/members
+[stars-shield]: https://img.shields.io/github/stars/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[stars-url]: https://github.com/Enngage/kontent-custom-element-language-copy/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[issues-url]: https://github.com/Enngage/kontent-custom-element-language-copy/issues
+[license-shield]: https://img.shields.io/github/license/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[license-url]: https://github.com/Enngage/kontent-custom-element-language-copy/blob/master/LICENSE
+[core-shield]: https://img.shields.io/static/v1?label=&message=core%20integration&style=for-the-badge&color=FF5733
+[gallery-shield]: https://img.shields.io/static/v1?label=&message=extension%20gallery&style=for-the-badge&color=51bce0
+[stack-shield]: https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white&style=for-the-badge
+[discussion-shield]: https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?logo=github&style=for-the-badge
+[product-demo]: docs/demo.gif?raw=true

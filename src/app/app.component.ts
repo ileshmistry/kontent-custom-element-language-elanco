@@ -128,7 +128,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                     contentItemsToCreate: processedContentItems,
                     isPreview: false,
                     overwriteLanguageVariants: this.overwriteExistingVariants,
-                    existingContentItems: existingContentItems
+                    existingContentItems: existingContentItems,
+                    processedContentItems: []
                 });
 
                 this.infoMessage = `Copied '${createdLanguageVariants.length}' language variants from language '${this.selectedLanguage.codename}' to '${this.targetLanguageCodename}'`;

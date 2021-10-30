@@ -47,9 +47,15 @@ export class ManagementService {
         createdLanguageVariants: LanguageVariantModels.ContentItemLanguageVariant[];
         contentItemsToCreate: ContentItemModels.ContentItem[];
         existingContentItems: ContentItemModels.ContentItem[];
+        processedContentItems: ContentItemModels.ContentItem[];
         isPreview: boolean;
         overwriteLanguageVariants: boolean;
     }): Promise<void> {
+        if (data.processedContentItems.find(m => m.id === data.linkedItemId)) {
+            // item was already processed, skip it (avoid circular recursion)
+            return;
+        }
+
         // get data from source item
         const sourceItemVariant = await data.client
             .viewLanguageVariant()
@@ -58,6 +64,8 @@ export class ManagementService {
             .toPromise();
 
         const contentItem = (await data.client.viewContentItem().byItemId(data.linkedItemId).toPromise()).data;
+
+        data.processedContentItems.push(contentItem);
 
         const languages = await this.getOrSetLanguages(data.client);
 
@@ -136,7 +144,8 @@ export class ManagementService {
                             contentItemsToCreate: data.contentItemsToCreate,
                             isPreview: data.isPreview,
                             overwriteLanguageVariants: data.overwriteLanguageVariants,
-                            existingContentItems: data.existingContentItems
+                            existingContentItems: data.existingContentItems,
+                            processedContentItems: data.processedContentItems
                         });
                     }
                 }

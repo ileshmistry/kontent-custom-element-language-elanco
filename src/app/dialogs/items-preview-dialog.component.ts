@@ -43,7 +43,8 @@ export class ItemsPreviewDialogComponent implements OnInit {
                 contentItemsToCreate: this.contentItems,
                 isPreview: true,
                 overwriteLanguageVariants: this.overwriteExistingVariants,
-                existingContentItems: this.existingContentItems
+                existingContentItems: this.existingContentItems,
+                processedContentItems: []
             });
 
             this.loading = false;

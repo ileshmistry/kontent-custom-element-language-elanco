@@ -7,7 +7,7 @@ import {
     ManagementClient,
     SharedModels,
     WorkflowModels
-} from '@kentico/kontent-management';
+} from '@kontent-ai/management-sdk';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
